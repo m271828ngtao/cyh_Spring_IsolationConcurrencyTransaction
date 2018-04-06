@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cyh.dao.EmployeeMapper">
+
+    <select id="findById" resultType="com.cyh.entity.Employee">
+        SELECT * FROM employee WHERE id = #{id}
+    </select>
+
+    <update id="reduceMoney">
+        UPDATE employee SET money = money - #{number} WHERE id = #{id}
+    </update>
+
+    <update id="increaseMoney">
+        UPDATE employee SET money = money + #{number} WHERE id = #{id}
+    </update>
+
+    <update id="updateEmployee">
+        UPDATE employee SET money = #{e.money} WHERE id = #{e.id}
+    </update>
+
+</mapper>
