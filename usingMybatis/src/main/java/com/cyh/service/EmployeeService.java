@@ -20,4 +20,11 @@ public class EmployeeService {
         employeeMapper.updateEmployee(employee);
     }
 
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void reduceMoneyWithPessimisticLock(Integer id) {
+        Employee employee = employeeMapper.findByIdWithPessimisticLock(id);
+        employee.setMoney(employee.getMoney() - 10);
+        employeeMapper.updateEmployee(employee);
+    }
+
 }

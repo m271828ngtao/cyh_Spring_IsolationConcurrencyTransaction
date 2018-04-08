@@ -9,6 +9,10 @@
         SELECT * FROM employee WHERE id = #{id}
     </select>
 
+    <select id="findByIdWithPessimisticLock" resultType="com.cyh.entity.Employee">
+        SELECT * FROM employee WHERE id = #{id} FOR UPDATE
+    </select>
+
     <update id="reduceMoney">
         UPDATE employee SET money = money - #{number} WHERE id = #{id}
     </update>
