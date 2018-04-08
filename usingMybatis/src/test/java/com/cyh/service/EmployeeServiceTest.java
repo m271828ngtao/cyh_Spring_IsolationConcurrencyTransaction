@@ -16,13 +16,13 @@ public class EmployeeServiceTest {
         context = new ClassPathXmlApplicationContext("applicationContext.xml");
         employeeService = context.getBean(EmployeeService.class);
 
-        final int type = 1;
+        final int type = 2;
         if (type == 0) {
             reduceMoney();
         } else if (type == 1) {
             reduceMoneyWithPessimisticLock();
         } else if (type == 2) {
-
+            reduceMoneyWithOptimisticLock();
         }
     }
 
@@ -37,6 +37,13 @@ public class EmployeeServiceTest {
         int threadCount = 100;
         while (threadCount-- > 0) {
             new Thread(() -> employeeService.reduceMoneyWithPessimisticLock(1)).start();
+        }
+    }
+
+    private void reduceMoneyWithOptimisticLock() {
+        int threadCount = 100;
+        while (threadCount-- > 0) {
+            new Thread(() -> employeeService.reduceMoneyWithOptimisticLock(1)).start();
         }
     }
 

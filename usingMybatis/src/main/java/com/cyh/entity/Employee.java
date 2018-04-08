@@ -7,5 +7,6 @@ public class Employee {
 
     private Integer id;
     private Integer money;
+    private Integer version;
 
 }

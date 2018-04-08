@@ -9,7 +9,8 @@ DROP TABLE IF EXISTS employee;
 CREATE TABLE employee(
   id INTEGER NOT NULL,
   money INTEGER,
+  version INTEGER,
   PRIMARY KEY (id)
 );
 
-INSERT INTO employee VALUE (1, 0);
+INSERT INTO employee VALUE (1, 0, 1);
