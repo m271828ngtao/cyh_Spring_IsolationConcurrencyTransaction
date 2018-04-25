@@ -16,10 +16,6 @@ public interface EmployeeMapper {
      */
     Employee findByIdWithPessimisticLock(@Param("id") Integer id);
 
-    void reduceMoney(@Param("id") Integer id, @Param("number") Integer number);
-
-    void increaseMoney(@Param("id") Integer id, @Param("number") Integer number);
-
     void updateEmployee(@Param("e") Employee employee);
 
     /**

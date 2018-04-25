@@ -3,6 +3,8 @@ package com.cyh.service;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,20 +15,26 @@ import com.cyh.entity.Employee;
 @Service
 public class EmployeeService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeService.class);
+
     @Autowired
-    private EmployeeMapper employeeMapper;
+    private EmployeeMapper      employeeMapper;
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void reduceMoney(Integer id) {
+    public void increaseMoney(Integer id) {
         Employee employee = employeeMapper.findById(id);
-        employee.setMoney(employee.getMoney() - 10);
+        final Integer oldMoney = employee.getMoney();
+        LOGGER.info("oldMoney: {}", oldMoney);
+        employee.setMoney(oldMoney + 1);
         employeeMapper.updateEmployee(employee);
     }
 
     @Transactional(rollbackFor = RuntimeException.class)
-    public void reduceMoneyWithPessimisticLock(Integer id) {
+    public void increaseMoneyWithPessimisticLock(Integer id) {
         Employee employee = employeeMapper.findByIdWithPessimisticLock(id);
-        employee.setMoney(employee.getMoney() - 10);
+        final Integer oldMoney = employee.getMoney();
+        LOGGER.info("oldMoney: {}", oldMoney);
+        employee.setMoney(oldMoney + 1);
         employeeMapper.updateEmployee(employee);
     }
 
@@ -34,11 +42,11 @@ public class EmployeeService {
      * 失败尝试
      * @param id
      */
-    public void reduceMoneyWithOptimisticLock(Integer id) {
+    public void increaseMoneyWithOptimisticLock(Integer id) {
         int tryTimes = 0;
         while (true) {
             tryTimes++;
-            if (internalReduceMoneyWithOptimisticLock(id) != 0) {
+            if (internalIncreaseMoneyWithOptimisticLock(id) != 0) {
                 // 说明更新成功，直接退出
                 break;
             }
@@ -54,7 +62,7 @@ public class EmployeeService {
                 Thread.currentThread().interrupt();
             }
         }
-        System.out.println(Thread.currentThread().getName() + " tryTimes: " + tryTimes);
+        LOGGER.info("tryTimes: {}", tryTimes);
     }
 
     /**
@@ -63,10 +71,11 @@ public class EmployeeService {
      * @return
      */
     @Transactional(rollbackFor = RuntimeException.class)
-    public Integer internalReduceMoneyWithOptimisticLock(Integer id) {
+    public Integer internalIncreaseMoneyWithOptimisticLock(Integer id) {
         Employee employee = employeeMapper.findById(id);
-        employee.setMoney(employee.getMoney() - 10);
-        employee.setVersion(employee.getVersion() + 1);
+        final Integer oldMoney = employee.getMoney();
+        LOGGER.info("oldMoney: {}", oldMoney);
+        employee.setMoney(oldMoney + 1);
         return employeeMapper.updateEmployeeWithOptimisticLock(employee);
     }
 

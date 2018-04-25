@@ -13,20 +13,12 @@
         SELECT * FROM employee WHERE id = #{id} FOR UPDATE
     </select>
 
-    <update id="reduceMoney">
-        UPDATE employee SET money = money - #{number} WHERE id = #{id}
-    </update>
-
-    <update id="increaseMoney">
-        UPDATE employee SET money = money + #{number} WHERE id = #{id}
-    </update>
-
     <update id="updateEmployee">
         UPDATE employee SET money = #{e.money} WHERE id = #{e.id}
     </update>
 
     <update id="updateEmployeeWithOptimisticLock">
-        UPDATE employee SET money = #{e.money}, version = #{e.version} WHERE id = #{e.id} AND #{e.version} = version + 1
+        UPDATE employee SET money = #{e.money}, version = #{e.version} + 1 WHERE id = #{e.id} AND #{e.version} = version
     </update>
 
 </mapper>
